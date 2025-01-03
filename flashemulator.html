@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Emulator</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/microsoft/fluentui-emoji/refs/heads/main/assets/Deciduous%20tree/3D/deciduous_tree_3d.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            user-select: none;
+        }
+        .container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+        }
+        #player-container {
+            width: 100%;
+            height: 100%;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+        }
+        button {
+            background-color: mediumpurple;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 10px;
+            width: 100px;
+        }
+        button:hover {
+            background-color: #6a0dad;
+        }
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="player-container"></div>
+    </div>
+    <div class="controls">
+        <button onclick="document.getElementById('file-input').click()">Upload</button>
+        <input type="file" id="file-input" accept=".swf">
+    </div>
+
+    <!-- Load Ruffle from the CDN -->
+    <script src="https://unpkg.com/@ruffle-rs/ruffle@latest"></script>
+    <script>
+        console.log('Ruffle script loaded');
+
+        document.addEventListener('DOMContentLoaded', () => {
+        
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            player.style.width = '100%';
+            player.style.height = '100%';
+            document.getElementById("player-container").appendChild(player);
+            console.log('Ruffle player initialized');
+            
+            function handleFileUpload(event) {
+                const file = event.target.files[0];
+                console.log('File selected:', file);
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        console.log('FileReader loaded file');
+                        
+                        try {
+                            player.load({ data: e.target.result }).then(() => {
+                                console.log('SWF file loaded successfully');
+                            }).catch(error => {
+                                console.error('Error loading SWF file:', error);
+                                alert('Failed to load SWF file. Please make sure it is a valid Flash file.');
+                            });
+                        } catch (error) {
+                            console.error('Error processing file:', error);
+                            alert('Failed to process file. Please make sure it is a valid Flash file.');
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                } else {
+                    alert('No file selected. Please upload a SWF file.');
+                }
+            }
+            
+            document.getElementById("file-input").addEventListener('change', handleFileUpload);
+        });
+    </script>
+</body>
+</html>
