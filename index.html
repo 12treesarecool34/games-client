@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Games</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/microsoft/fluentui-emoji/refs/heads/main/assets/Deciduous%20tree/3D/deciduous_tree_3d.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+        }
+        .title-container {
+            text-align: center;
+            padding: 40px;
+            background-color: #1e1e1e;
+            font-size: 28px;
+            font-weight: bold;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .subtext-title {
+            font-size: 18px;
+            font-weight: normal;
+            color: lightgray;
+            margin-top: 10px;
+        }
+        .container {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #444;
+            width: 80%;
+            max-width: 400px;
+            margin: 20px auto 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: mediumpurple;
+        }
+        button {
+            background-color: mediumpurple;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6a0dad;
+        }
+        #game-frame {
+            display: none;
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: black;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-container">
+        Tree Games
+        <div class="subtext-title">
+            Play Eaglercraft and any flash game!
+        </div>
+    </div>
+    <div class="container" style="margin-top: 20px;">
+        <button onclick="openRawHtml('https://raw.githubusercontent.com/12treesarecool34/games-client/refs/heads/main/eaglercraft.html')">Launch Eaglercraft</button>
+        <button onclick="openRawHtml('https://raw.githubusercontent.com/12treesarecool34/games-client/refs/heads/main/flashemulator.html')">Launch Flash Emulator</button>
+    </div>
+    <iframe id="game-frame"></iframe>
+    <script>
+        const expectedName = "MASTER";
+        fetch('https://raw.githubusercontent.com/12treesarecool34/games-client/refs/heads/main/access.txt')
+            .then(response => response.text())
+            .then(text => {
+                const accessList = text.split('\n').map(name => name.trim());
+                if (!accessList.includes(expectedName)) {
+                    document.body.innerHTML = '';
+                }
+            })
+            .catch(() => {
+                document.body.innerHTML = '';
+            });
+
+        function openRawHtml(url) {
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const iframe = document.getElementById("game-frame");
+                    iframe.srcdoc = html;
+                    iframe.style.display = "block";
+                })
+                .catch(() => {});
+        }
+    </script>
+</body>
+</html>
